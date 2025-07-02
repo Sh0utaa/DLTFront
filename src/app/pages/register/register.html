@@ -1,4 +1,21 @@
+<div class="min-h-screen flex items-center justify-center bg-white p-4">
+  <div class="w-full max-w-md bg-white p-6 rounded-xl shadow space-y-6">
 
-<div>
-  REGISTER NOW 
+    <h2 class="text-2xl font-bold text-center text-gray-800">Register</h2>
+
+    <form (ngSubmit)="onSubmit()" class="space-y-4">
+      <input [(ngModel)]="form.username" name="username" placeholder="Username" required class="w-full p-2 border rounded-lg" />
+      <input [(ngModel)]="form.email" name="email" placeholder="Email" required class="w-full p-2 border rounded-lg" type="email" />
+      <input [(ngModel)]="form.birthdate" name="birthdate" placeholder="Birthdate" required class="w-full p-2 border rounded-lg" type="date" />
+      <input [(ngModel)]="form.password" name="password" placeholder="Password" required class="w-full p-2 border rounded-lg" type="password" />
+
+      <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">
+        Register 
+      </button>
+    </form>
+
+
+    <!-- Optional: Link to Login -->
+    <a routerLink="/login" class="text-blue-600 hover:underline text-center block mt-4">Already have an account? Login</a>
+  </div>
 </div>
