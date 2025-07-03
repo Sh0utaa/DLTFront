@@ -1,0 +1,35 @@
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#f3f9ff] via-[#fdf6f4] to-[#e6efff]">
+  <div class="w-full max-w-sm bg-white p-8 rounded-md shadow-md space-y-6">
+    
+    <!-- Title -->
+    <h2 class="text-xl font-semibold text-gray-800 text-center">Verify code</h2>
+
+    <!-- Code Inputs -->
+    <div class="flex justify-center gap-2">
+      <input *ngFor="let i of [0,1,2,3,4,5]; let idx = index"
+             [(ngModel)]="code[idx]"
+             name="code{{idx}}"
+             type="text"
+             inputmode="numeric"
+             maxlength="1"
+             (input)="onInput($event, idx)"
+             (keydown)="onKeyDown($event, idx)"
+             class="w-10 h-12 text-center border border-gray-300 rounded-md focus:outline-none focus:border-blue-600 text-lg" />
+    </div>
+
+    <!-- Instructions -->
+    <div class="text-sm text-gray-600 text-center space-y-2">
+      <p>We sent a code to your email, please verify</p>
+      <p>If you see no code <a href="#" class="text-blue-600 hover:underline">re-send</a></p>
+    </div>
+
+    <!-- Button -->
+    <div class="flex justify-center mt-4">
+      <button type="button" 
+              (click)="verifyCode()"
+              class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded">
+        Next
+      </button>
+    </div>
+  </div>
+</div>
