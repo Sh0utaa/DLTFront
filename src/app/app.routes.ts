@@ -4,6 +4,9 @@ import { About } from './pages/about/about';
 import { Login } from './pages/login/login';
 import { Register } from './pages/register/register';
 import { Verify } from './pages/verify/verify';
+import { Leaderbaords } from './pages/leaderbaords/leaderbaords';
+import { Exam } from './pages/exam/exam';
+import { Info } from './pages/info/info'
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -11,5 +14,8 @@ export const routes: Routes = [
   { path: 'login', component: Login },
   { path: 'register', component: Register },
   { path: 'verify', component: Verify },
+  { path: 'leaderboards', component: Leaderbaords },
+  { path: 'exam', component: Exam },
+  { path: 'info', component: Info },
   { path: '**', redirectTo: '' } 
 ];

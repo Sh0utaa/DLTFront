@@ -24,12 +24,19 @@
     </div>
 
     <!-- Button -->
-    <div class="flex justify-center mt-4">
-      <button type="button" 
-              (click)="verifyCode()"
-              class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded">
-        Next
-      </button>
-    </div>
+  <div class="flex justify-around mt-4">
+    <a routerLink="/login" class="p-2 rounded hover:bg-gray-100">
+      <img src="assets/svgs/arrow-left.svg" alt="Back" class="w-7 h-5" />
+    </a>
+
+    <button
+      type="button"
+      (click)="verifyCode()"
+      class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded"
+    >
+      Next
+    </button>
+  </div>
+
   </div>
 </div>

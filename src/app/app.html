@@ -1,2 +1,58 @@
+<div class="relative h-screen">
+  <!-- Desktop Sidebar (fixed, above content) -->
+  <nav class="hidden md:block fixed top-0 left-0 h-full w-16 bg-white shadow-lg z-50">
+    <div class="flex flex-col h-full p-2 justify-between">
+      <!-- Top Items (A, B, C) -->
+      <div class="flex flex-col space-y-2">
+        @for (item of menuItems.slice(0, 3); track item) {
+          <a routerLink="/{{item.icon}}" class="flex items-center justify-center p-3 rounded-lg hover:bg-gray-100 transition-colors">
+            <!-- <span class="text-lg font-bold">{{ item.icon }}</span> -->
+            <img [src]="item.imgSrc" alt="{{item.icon}}" class="w-5 h-5 object-contain">
+          </a>
+        }
+      </div>
 
-<router-outlet></router-outlet>
+      <!-- Bottom Items (D, E) -->
+      <div class="flex flex-col space-y-2">
+        @for (item of menuItems.slice(3); track item) {
+          <a routerLink="/{{item.icon}}" class="flex items-center justify-center p-3 rounded-lg hover:bg-gray-100 transition-colors">
+            <!-- <span class="text-lg font-bold">{{ item.icon }}</span> -->
+            <img [src]="item.imgSrc" alt="{{item.icon}}" class="w-5 h-5 object-contain">
+          </a>
+        }
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Top Navbar (fixed, above content) -->
+  <nav class="md:hidden fixed top-0 left-0 w-full bg-white shadow-lg z-50 p-2 flex">
+    <!-- First Items (A, B, C) -->
+    <div class="flex space-x-2">
+      @for (item of menuItems.slice(0, 3); track item) {
+        <a routerLink="/{{item.icon}}" class="flex items-center justify-center p-3 rounded-lg hover:bg-gray-100 transition-colors w-10">
+          <!-- <span class="text-lg font-bold">{{ item.icon }}</span> -->
+            <img [src]="item.imgSrc" alt="{{item.icon}}" class="w-5 h-5 object-contain">
+        </a>
+      }
+    </div>
+
+    <!-- Spacer to push D/E to the end -->
+    <div class="flex-1"></div>
+
+    <!-- Last Items (D, E) -->
+    <div class="flex space-x-2">
+      @for (item of menuItems.slice(3); track item) {
+        <a routerLink="/{{item.icon}}" class="flex items-center justify-center p-3 rounded-lg hover:bg-gray-100 transition-colors w-10">
+          <!-- <span class="text-lg font-bold">{{ item.icon }}</span> -->
+            <img [src]="item.imgSrc" alt="{{item.icon}}" class="w-5 h-5 object-contain">
+        </a>
+      }
+    </div>
+  </nav>
+
+  <!-- Content Area (with proper spacing) -->
+  <div class="h-full pt-16 md:pt-0 md:pl-16">
+    <!-- Your router-outlet or other components will render here -->
+    <router-outlet></router-outlet>
+  </div>
+</div>

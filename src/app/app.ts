@@ -1,12 +1,18 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { RouterLink, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, RouterLink],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
 export class App {
-  protected title = 'my-app';
+  menuItems = [
+    { icon: 'home', imgSrc: 'assets/svgs/house.svg' },
+    { icon: 'exam', imgSrc: 'assets/svgs/card-checklist.svg'},
+    { icon: 'leaderboards', imgSrc: 'assets/svgs/bar-chart.svg' },
+    { icon: 'info', imgSrc: 'assets/svgs/info-circle.svg' },
+    { icon: 'login', imgSrc: 'assets/svgs/person-circle.svg' },
+  ];
 }
