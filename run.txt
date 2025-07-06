@@ -1,0 +1,1 @@
+ng serve --ssl true --ssl-key ./ssl/key.pem --ssl-cert ./ssl/cert.crt

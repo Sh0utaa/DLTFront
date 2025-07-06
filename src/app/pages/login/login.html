@@ -30,14 +30,25 @@
 
       <div class="flex items-center justify-between mt-2">
         <div class="text-sm text-blue-600 space-y-3">
+          <!-- Status message -->
+          <p *ngIf="statusMessage" [ngClass]="{
+              'text-green-600': statusType === 'success',
+              'text-red-600': statusType === 'error'
+            }" class="text-sm font-medium mb-2">
+            {{ statusMessage }}
+          </p>
+
           <a routerLink="/register" class="block hover:underline">No Account? <span class="font-medium">Create one!</span></a>
-          <a href="#" class="block hover:underline">Forgot password?</a>
+          <a routerLink="/verify" class="block hover:underline">Forgot password?</a>
         </div>
         
         <!-- Button moved here -->
-        <button routerLink="/verify" type="submit" class="bg-blue-600 hover:bg-blue-700 text-white py-1 px-6 rounded h-fit">
-          Next
-        </button>
+        <button
+        type="submit"
+        class="bg-blue-600 hover:bg-blue-700 text-white py-1 px-6 rounded h-fit mt-3 self-end"
+      >
+        Next
+      </button>
       </div>
     </form>
   </div>
