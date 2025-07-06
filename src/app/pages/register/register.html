@@ -1,52 +1,73 @@
 <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#f3f9ff] via-[#fdf6f4] to-[#e6efff]">
   <div class="w-full max-w-sm bg-white p-8 rounded-md shadow-md space-y-6">
     
-    <!-- Title -->
     <h2 class="text-xl font-semibold text-gray-800">Create account</h2>
 
-    <!-- Form -->
     <form (ngSubmit)="onSubmit()" class="space-y-4">
+      <!-- Username -->
       <input [(ngModel)]="form.username" name="username" placeholder="Username" required autocomplete="off"
              class="w-full border-b border-gray-400 focus:outline-none focus:border-blue-600 p-1 placeholder-gray-600" />
       
+      <!-- Email -->
       <input [(ngModel)]="form.email" name="email" placeholder="Email" required type="email" autocomplete="off"
              class="w-full border-b border-gray-400 focus:outline-none focus:border-blue-600 p-1 placeholder-gray-600" />
       
+      <!-- Birthdate -->
       <input [(ngModel)]="form.birthdate" name="birthdate" 
             placeholder="DD/MM/YYYY" required type="text"
             (input)="formatDate($event)"
             (keydown)="validateNumber($event)"
             class="w-full border-b border-gray-400 focus:outline-none focus:border-blue-600 p-1 placeholder-gray-600" />
 
-        <div class="relative">
-          <input
-            [(ngModel)]="form.password"
-            [type]="showPassword ? 'text' : 'password'"
-            name="password"
-            placeholder="Password"
-            required
-            autocomplete="off"
-            class="w-full border-b border-gray-400 focus:outline-none focus:border-blue-600 p-1 pr-10 placeholder-gray-600"
-          />
+      <!-- Password -->
+      <div class="relative">
+        <input
+          [(ngModel)]="form.password"
+          [type]="showPassword ? 'text' : 'password'"
+          name="password"
+          placeholder="Password"
+          required
+          autocomplete="off"
+          class="w-full border-b border-gray-400 focus:outline-none focus:border-blue-600 p-1 pr-10 placeholder-gray-600"
+        />
 
-          <!-- Eye Icon Button -->
-          <button type="button" (click)="showPassword = !showPassword"
-            class="absolute right-0 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 px-2">
-            <img [src]="showPassword ? 'assets/svgs/eye-slash.svg' : 'assets/svgs/eye.svg'" 
-                [alt]="showPassword ? 'Hide password' : 'Show password'"
-                class="w-5 h-5">
-          </button>
-        </div>
+        <!-- Eye Icon Button -->
+        <button type="button" (click)="showPassword = !showPassword"
+          class="absolute right-0 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 px-2">
+          <img [src]="showPassword ? 'assets/svgs/eye-slash.svg' : 'assets/svgs/eye.svg'" 
+              [alt]="showPassword ? 'Hide password' : 'Show password'"
+              class="w-5 h-5">
+        </button>
+      </div>
 
-        <div class="flex items-center justify-between mt-2">
-          <div class="text-sm text-blue-600 space-y-3">
-            <a routerLink="/login" class="block hover:underline">Have an account? <span class="font-medium">Sign in!</span></a>
-          </div>
-          
-          <!-- Button moved here -->
-          <button routerLink="/verify" type="submit" class="bg-blue-600 hover:bg-blue-700 text-white py-1 px-6 rounded h-fit">
-            Next
-          </button>
+      <!-- Password Errors (only shown after submit attempt) -->
+      <div *ngIf="showPasswordErrors" class="text-red-500 text-sm">
+        <p *ngIf="passwordErrors.length > 0" class="font-medium mb-1">Password must have:</p>
+        <ul class="list-disc list-inside">
+          <li *ngFor="let error of passwordErrors">{{error}}</li>
+        </ul>
+      </div>
+
+      <!-- Status Message -->
+      <p *ngIf="statusMessage" [ngClass]="{
+            'text-green-600': statusType === 'success',
+            'text-red-600': statusType === 'error'
+          }" class="text-sm font-medium">
+          {{ statusMessage }}
+      </p>
+
+      <div class="flex items-center justify-between">
+        <a routerLink="/login" class="text-sm text-blue-600 hover:underline">
+          Have an account? <span class="font-medium">Sign in!</span>
+        </a>
+        
+        <button
+          type="submit"
+          class="bg-blue-600 hover:bg-blue-700 text-white py-1 px-6 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+          [disabled]="!isFormComplete()"
+        >
+          Next
+        </button>
       </div>
     </form>
   </div>

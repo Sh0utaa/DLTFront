@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { EmailService } from '../../services/email.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-verify',
@@ -10,58 +12,97 @@ import { RouterLink } from '@angular/router';
   templateUrl: './verify.html'
 })
 export class Verify {
+  email = '';
+  mode = '';
+  formData: any;
+
   code: string[] = ['', '', '', '', '', ''];
 
-  constructor(private location: Location) {}
+  constructor(
+    private location: Location,
+    private router: Router,
+    private emailService: EmailService,
+    private authService: AuthService
+  ) {
+    const nav = this.router.getCurrentNavigation();
+    const state = nav?.extras.state as any;
+
+    if (state) {
+      this.email = state.formData.email;
+      this.formData = state.formData;
+      this.mode = state.mode;
+    }
+  } 
+
+  ngOnInit() {
+    if(this.mode !== 'register' && this.mode !== 'forgot-password')
+    {
+      this.router.navigate(['/exam']);
+    }
+
+    if(this.mode === 'register')
+    {
+      console.log("sending verification code to: ", this.email);
+      this.emailService.sendVerificationCode(this.email);
+    } 
+    else {
+      console.log("sending password reset code to: ", this.email);
+      this.emailService.sendPasswordResetCode(this.email);
+      return;
+    }
+  }
 
   goBack(): void {
     this.location.back();
   }
 
-  onInput(event: Event, index: number) {
-    const input = event.target as HTMLInputElement;
-    const value = input.value.replace(/\D/g, '');
-
-    // Replace input and store value
-    this.code[index] = value;
-    input.value = value;
-
-    if (value && index < this.code.length - 1) {
-      const nextInput = document.querySelector<HTMLInputElement>(`input[name="code${index + 1}"]`);
-      nextInput?.focus();
-    }
-  }
-
-  onKeyDown(event: KeyboardEvent, index: number) {
-    const input = event.target as HTMLInputElement;
-
-    // Backspace behavior
-    if (event.key === 'Backspace') {
-      if (input.value === '' && index > 0) {
-        const prevInput = document.querySelector<HTMLInputElement>(`input[name="code${index - 1}"]`);
-        this.code[index - 1] = '';
-        prevInput?.focus();
-        event.preventDefault();
-      }
-    }
-
-    // Left/Right arrow support
-    if (event.key === 'ArrowLeft' && index > 0) {
-      const prevInput = document.querySelector<HTMLInputElement>(`input[name="code${index - 1}"]`);
-      prevInput?.focus();
-    }
-
-    if (event.key === 'ArrowRight' && index < this.code.length - 1) {
-      const nextInput = document.querySelector<HTMLInputElement>(`input[name="code${index + 1}"]`);
-      nextInput?.focus();
-    }
-  }
-
   verifyCode() {
     const fullCode = this.code.join('');
-    if (fullCode.length === 6) {
-      console.log('Verifying code:', fullCode);
-      // Add actual verification logic here
+    if (fullCode.length !== 6) {
+      alert('Please enter the full 6-digit code.');
+      return;
+    }
+
+    console.log('Verifying code:', fullCode);
+
+    if (this.mode === 'register') {
+      this.emailService.verifyCode(this.email, fullCode).subscribe({
+        next: (success) => {
+          if (!success) {
+            alert("Invalid code");
+            return;
+          }
+          this.authService.register(this.formData).subscribe({
+            next: (response) => {
+              // Handle successful registration
+              console.log('Registration successful', response);
+            },
+            error: (err) => {
+              console.error('Registration failed', err);
+              alert("Registration failed");
+            }
+          });
+        },
+        error: (err) => {
+          console.error('Verification failed', err);
+          alert("Verification failed");
+        }
+      });
+    } 
+    else if (this.mode === 'forgot-password') {
+      this.emailService.verifyPasswordResetCode(this.email, fullCode).subscribe({
+        next: (success) => {
+          if (!success) {
+            alert("Invalid code");
+            return;
+          }
+          // Handle successful password reset verification
+        },
+        error: (err) => {
+          console.error('Password reset verification failed', err);
+          alert("Verification failed");
+        }
+      });
     } else {
       alert('Please enter the full 6-digit code.');
     }
