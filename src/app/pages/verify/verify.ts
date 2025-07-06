@@ -42,11 +42,9 @@ export class Verify {
 
     if(this.mode === 'register')
     {
-      console.log("sending verification code to: ", this.email);
       this.emailService.sendVerificationCode(this.email);
     } 
     else {
-      console.log("sending password reset code to: ", this.email);
       this.emailService.sendPasswordResetCode(this.email);
       return;
     }
@@ -63,8 +61,6 @@ export class Verify {
       return;
     }
 
-    console.log('Verifying code:', fullCode);
-
     if (this.mode === 'register') {
       this.emailService.verifyCode(this.email, fullCode).subscribe({
         next: (success) => {
@@ -76,6 +72,21 @@ export class Verify {
             next: (response) => {
               // Handle successful registration
               console.log('Registration successful', response);
+
+              this.authService.login(this.formData.email, this.formData.password).subscribe({
+                next: (loginResponse) => {
+                  // Navigate to profile after successful login
+                  this.router.navigate(['/profile']);
+                },
+                error: (loginError) => {
+                  console.error('Auto-login failed', loginError);
+                  // Even if auto-login fails, registration was successful
+                  this.router.navigate(['/login'], {
+                    queryParams: { registered: 'true' }
+                  });
+                }
+              });
+
             },
             error: (err) => {
               console.error('Registration failed', err);

@@ -1,1 +1,30 @@
-<p>profile works!</p>
+<div class="profile-container">
+  <!-- Loading state -->
+  <div *ngIf="isLoading" class="loading-spinner">
+    Loading...
+  </div>
+
+  <!-- Error message -->
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Profile content -->
+  <div *ngIf="!isLoading && !errorMessage">
+    <h1>Your Profile</h1>
+    
+    <div *ngIf="userData" class="user-info">
+      <p>Welcome, {{ userData.username }}!</p>
+      <p>Email: {{ userData.email }}</p>
+      <!-- Add more user data fields as needed -->
+    </div>
+
+    <button 
+      (click)="logout()" 
+      [disabled]="isLoading"
+      class="logout-button"
+    >
+      {{ isLoading ? 'Logging out...' : 'Logout' }}
+    </button>
+  </div>
+</div>

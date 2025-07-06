@@ -36,7 +36,6 @@ export class Login {
       }
     }).subscribe({
       next: (res) => {
-        console.log('User is already authenticated:', res);
         this.router.navigateByUrl('/profile');
       },
       error: (err) => {
@@ -58,7 +57,6 @@ export class Login {
     .subscribe({
       next: (response) => {
         // Check if status is in 200-299 range
-        console.log("response: ", response);
         if (response.status >= 200 && response.status < 300) {
           this.statusMessage = 'Sign in successful!';
           this.statusType = 'success';

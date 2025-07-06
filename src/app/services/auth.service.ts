@@ -38,11 +38,9 @@ export class AuthService {
   }
   
   register(formData: any): Observable<any> {
-    console.log("registration form data: ", formData);
     return this.http.post(`${this.API_URL}/register`, formData).pipe(
       tap(() => {
         this.isAuthenticatedSubject.next(false);
-        this.router.navigate(['/login']);
       })
     );
   }
