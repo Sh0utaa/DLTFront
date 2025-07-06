@@ -50,7 +50,6 @@ export class Login {
     this.statusType = null;
 
     this.http.post<any>('https://dlt-api.shotatevdorashvili.com/api/auth/login', this.form, {
-    // this.http.post<any>('http://localhost:5279/api/auth/login', this.form, {
       withCredentials: true, 
       observe: 'response' 
     })
