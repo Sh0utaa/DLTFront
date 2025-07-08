@@ -1,1 +1,56 @@
-<p>exam works!</p>
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#fff8ec] via-[#eaf7ff] to-[#eef4ff] px-4">
+
+<div class="flex flex-col items-center gap-6 p-6">
+  <h1 class="text-2xl font-semibold text-center">Category</h1>
+
+  <!-- Categories -->
+  <div class="flex flex-wrap justify-center gap-4">
+    <div
+      *ngFor="let category of categories"
+      (click)="selectCategory(category.id)"
+      [class.border-blue-500]="selectedCategoryId === category.id"
+      [class.ring-2]="selectedCategoryId === category.id"
+      [class.ring-blue-400]="selectedCategoryId === category.id"
+      class="flex flex-col items-center bg-white rounded-xl p-3 w-24 h-28 shadow-sm
+             hover:shadow-lg hover:-translate-y-1 transition-all duration-200 cursor-pointer border"
+    >
+      <img
+        [src]="'assets/svgs/categories/' + category.id + '.svg'"
+        [alt]="category.label"
+        class="w-10 h-10"
+      />
+
+      <span class="text-xs text-center mt-2 leading-tight">
+        {{ category.label }}
+      </span>
+
+      <span
+        *ngIf="category.isNew"
+        class="text-[10px] bg-green-500 text-white px-1 rounded mt-1"
+      >
+        NEW
+      </span>
+    </div>
+  </div>
+
+  <h1 class="text-2xl font-semibold text-center">Language</h1>
+
+  <div class="mb-4">
+    <select
+      class="px-3 py-2 border rounded shadow-sm text-sm bg-white"
+      [(ngModel)]="selectedLanguage"
+    >
+      <option value="en">English</option>
+      <option value="ka">ქართული</option>
+    </select>
+  </div>
+
+  <!-- Start Exam Button -->
+  <button
+    class="mt-6 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded shadow"
+    (click)="startExam()"
+  >
+    Start Exam
+  </button>
+</div>
+</div>

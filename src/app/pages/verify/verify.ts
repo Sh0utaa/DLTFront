@@ -8,7 +8,7 @@ import { AuthService } from '../../services/auth.service';
 @Component({
   selector: 'app-verify',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './verify.html'
 })
 export class Verify {
