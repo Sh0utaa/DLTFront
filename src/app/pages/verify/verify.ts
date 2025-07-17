@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, ViewChildren, QueryList, ElementRef } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { EmailService } from '../../services/email.service';
 import { AuthService } from '../../services/auth.service';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-verify',
@@ -15,14 +16,18 @@ export class Verify {
   email = '';
   mode = '';
   formData: any;
-
+  isLoading = false;
+  statusMessage = '';
+  statusType: 'success' | 'error' | null = null;
+  fullCode = '';
   code: string[] = ['', '', '', '', '', ''];
 
   constructor(
     private location: Location,
     private router: Router,
     private emailService: EmailService,
-    private authService: AuthService
+    private authService: AuthService,
+    private http: HttpClient
   ) {
     const nav = this.router.getCurrentNavigation();
     const state = nav?.extras.state as any;
@@ -33,6 +38,8 @@ export class Verify {
       this.mode = state.mode;
     }
   } 
+
+  @ViewChildren('codeInput') codeInputs!: QueryList<ElementRef<HTMLInputElement>>;
 
   ngOnInit() {
     if(this.mode !== 'register' && this.mode !== 'forgot-password')
@@ -54,18 +61,35 @@ export class Verify {
     this.location.back();
   }
 
+  onKeyDown(event: KeyboardEvent) {
+    // Allow only numbers, backspace, and navigation keys
+    const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'];
+  
+    if (!/^\d$/.test(event.key) && !allowedKeys.includes(event.key)) {
+      event.preventDefault();
+    }
+  }
+
+  onPaste(event: ClipboardEvent) {
+    event.preventDefault();
+    const pasteData = event.clipboardData?.getData('text').trim() || '';
+    const numbersOnly = pasteData.replace(/\D/g, '').substring(0, 6);
+    this.fullCode = numbersOnly;
+  }
+
   verifyCode() {
-    const fullCode = this.code.join('');
-    if (fullCode.length !== 6) {
-      alert('Please enter the full 6-digit code.');
+    if (this.fullCode.length !== 6) {
+      this.statusMessage = "Please enter the full 6-digit code";
+      this.statusType = 'error';
       return;
     }
 
     if (this.mode === 'register') {
-      this.emailService.verifyCode(this.email, fullCode).subscribe({
+      this.emailService.verifyCode(this.email, this.fullCode).subscribe({
         next: (success) => {
           if (!success) {
-            alert("Invalid code");
+            this.statusMessage = "Invalid code";
+            this.statusType = 'error';
             return;
           }
           this.authService.register(this.formData).subscribe({
@@ -89,33 +113,57 @@ export class Verify {
 
             },
             error: (err) => {
-              console.error('Registration failed', err);
-              alert("Registration failed");
+              console.error('Verification failed', err);
+              this.statusMessage = "Verification failed";
+              this.statusType = 'error';
             }
           });
         },
         error: (err) => {
           console.error('Verification failed', err);
-          alert("Verification failed");
+          this.statusMessage = "Verification failed";
+          this.statusType = 'error';
         }
       });
     } 
     else if (this.mode === 'forgot-password') {
-      this.emailService.verifyPasswordResetCode(this.email, fullCode).subscribe({
+      this.emailService.verifyPasswordResetCode(this.email, this.fullCode).subscribe({
         next: (success) => {
           if (!success) {
-            alert("Invalid code");
+            this.statusMessage = "Invalid code";
+            this.statusType = 'error';
             return;
           }
-          // Handle successful password reset verification
+          // Call the /api/auth/reset-password route
+          let resetPasswordObject = {
+            "email": this.formData.email,
+            "code": this.fullCode,
+            "newPassword": this.formData.password
+          }
+          this.isLoading = true;
+          this.http.post("http://localhost:5279/api/auth/reset-password", resetPasswordObject)
+          .subscribe({
+            next: (resetResponse) => {
+              this.statusMessage = "Password reset successfully"
+              this.statusType = "success"
+              this.router.navigate(['/login']);
+            },
+            error: (resetError) => {
+              console.error('Password reset failed:', resetError);
+              this.statusMessage = `Password reset failed: ${resetError.error?.message || 'Please try again'}`
+              this.statusType = "success"
+            }
+          })
         },
         error: (err) => {
           console.error('Password reset verification failed', err);
-          alert("Verification failed");
+          this.statusMessage = "Verification failed";
+          this.statusType = 'error';
         }
       });
     } else {
-      alert('Please enter the full 6-digit code.');
+      this.statusMessage = "Please enter the full 6-digit code.";
+      this.statusType = 'error';
     }
   }
 }

@@ -9,6 +9,7 @@ import { Exam } from './pages/exam/exam';
 import { Info } from './pages/info/info'
 import { Profile } from './pages/profile/profile';
 import { Results } from './pages/results/results';
+import { ForgotPassword } from './pages/forgot-password/forgot-password';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -21,5 +22,6 @@ export const routes: Routes = [
   { path: 'info', component: Info },
   { path: 'profile', component: Profile },
   { path: 'results', component: Results },
+  { path: 'forgot-password', component: ForgotPassword },
   { path: '**', redirectTo: '' } 
 ];

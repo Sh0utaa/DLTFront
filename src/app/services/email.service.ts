@@ -20,7 +20,7 @@ export class EmailService {
     );
   }
   sendPasswordResetCode(email: string): Observable<any> {
-    return this.http.post(`${this.API_URL}/send-password-reset-code`, {email}).pipe(
+    return this.http.post(`${this.API_URL}/send-password-reset-code`, {email}, {responseType: 'text'}).pipe(
       catchError(error => {
         console.error('Forgot password api error: ', error);
         throw error;
@@ -38,6 +38,11 @@ export class EmailService {
   }
 
   verifyPasswordResetCode(email: string, code: string): Observable<any> {
-    return this.http.post(`${this.API_URL}/verify-password-reset-code`, { email, code });
+    return this.http.post(`${this.API_URL}/verify-password-reset-code`, { email, code }).pipe(
+      catchError(error => {
+        console.error('API Error: ', error);
+        throw error;
+      })
+    );
   }
 }
