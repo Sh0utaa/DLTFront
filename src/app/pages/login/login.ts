@@ -28,7 +28,8 @@ export class Login {
   constructor(private http: HttpClient, private router: Router) {}
 
     ngOnInit() {
-    this.http.get<{ message: string }>('https://dlt-api.shotatevdorashvili.com/api/auth/validate-user', {
+    // this.http.get<{ message: string }>('https://dlt-api.shotatevdorashvili.com/api/auth/validate-user', {
+    this.http.get<{ message: string }>('http://localhost:5279/api/auth/validate-user', {
       withCredentials: true,
       headers: {
           'Content-Type': 'application/json',
@@ -49,7 +50,7 @@ export class Login {
     this.statusMessage = null;
     this.statusType = null;
 
-    this.http.post<any>('https://dlt-api.shotatevdorashvili.com/api/auth/login', this.form, {
+    this.http.post<any>('http://localhost:5279/api/auth/login', this.form, {
       withCredentials: true, 
       observe: 'response' 
     })

@@ -8,6 +8,7 @@ import { Leaderbaords } from './pages/leaderbaords/leaderbaords';
 import { Exam } from './pages/exam/exam';
 import { Info } from './pages/info/info'
 import { Profile } from './pages/profile/profile';
+import { Results } from './pages/results/results';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -19,5 +20,6 @@ export const routes: Routes = [
   { path: 'exam', component: Exam },
   { path: 'info', component: Info },
   { path: 'profile', component: Profile },
+  { path: 'results', component: Results },
   { path: '**', redirectTo: '' } 
 ];

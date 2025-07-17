@@ -1,1 +1,50 @@
-<p>leaderbaords works!</p>
+<div class="container mx-auto px-4 py-8">
+  <h1 class="text-3xl font-bold text-center mb-8">Leaderboard</h1>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="text-center">
+    <div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500 mb-2"></div>
+    <p>Loading leaderboard...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !isLoading" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 rounded">
+    {{ error }}
+    <button (click)="fetchLeaderboard()" class="ml-4 text-blue-600 hover:text-blue-800">Retry</button>
+  </div>
+
+  <!-- Grid Layout -->
+  <div *ngIf="!isLoading && !error" class="grid gap-4">
+    <!-- Header Row -->
+    <div class="grid grid-cols-5 gap-4 bg-gray-800 text-white p-3 rounded-lg">
+      <div class="font-semibold">Email</div>
+      <div class="font-semibold text-center">Total Attempts</div>
+      <div class="font-semibold text-center">Passed</div>
+      <div class="font-semibold text-center">Failed</div>
+      <div class="font-semibold text-center">Pass Rate</div>
+    </div>
+
+    <!-- Data Rows -->
+    <div *ngFor="let user of leaderboardData" 
+         class="grid grid-cols-5 gap-4 p-3 bg-white hover:bg-gray-50 rounded-lg transition-colors duration-200">
+      <div class="truncate">{{ user.email }}</div>
+      <div class="text-center">{{ user.totalSessions }}</div>
+      <div class="text-center text-green-600 font-medium">{{ user.passedSessions }}</div>
+      <div class="text-center text-red-600 font-medium">{{ user.failedSessions }}</div>
+      <div class="text-center">
+        <span class="inline-block px-3 py-1 rounded-full text-sm font-medium"
+              [ngClass]="{
+                'bg-green-100 text-green-800': user.passingRate >= 50,
+                'bg-yellow-100 text-yellow-800': user.passingRate > 0 && user.passingRate < 50,
+                'bg-red-100 text-red-800': user.passingRate === 0
+              }">
+          {{ user.passingRate }}%
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="leaderboardData.length === 0 && !isLoading && !error" class="text-center text-gray-500 py-8">
+    No leaderboard data available
+  </div>
+</div>

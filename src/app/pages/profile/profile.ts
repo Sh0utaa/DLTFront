@@ -16,6 +16,7 @@ export class Profile {
   isLoading = true;
   errorMessage = '';
   userData: any;
+  stars = Array(5).fill(0);
 
   constructor(
     private authService: AuthService, 

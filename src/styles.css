@@ -9,3 +9,51 @@
   padding: 0.25rem 0;
   font-family: inherit;
 }
+
+/* Hide number input spinners in most browsers */
+.no-spinner::-webkit-outer-spin-button,
+.no-spinner::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.no-spinner {
+  -moz-appearance: textfield; /* Firefox */
+}
+
+/* Fade placeholder when focused */
+.placeholder-style::placeholder {
+  transition: opacity 0.2s ease-in-out;
+  opacity: 1;
+}
+
+.placeholder-style:focus::placeholder {
+  opacity: 0;
+}
+
+
+/* src/app/leaderboard/leaderboard.component.css */
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+th {
+  position: sticky;
+  top: 0;
+}
+
+tr:nth-child(even) {
+  background-color: #f9fafb;
+}
+
+/* src/app/leaderboard/leaderboard.component.css */
+.grid-cols-5 > div {
+  display: flex;
+  align-items: center;
+}
+
+.grid-cols-5 > div:not(:first-child) {
+  justify-content: center;
+}

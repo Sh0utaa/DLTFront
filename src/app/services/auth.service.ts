@@ -7,7 +7,8 @@ import { Router } from '@angular/router';
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly API_URL = 'https://dlt-api.shotatevdorashvili.com/api/auth';
+  // private readonly API_URL = 'https://dlt-api.shotatevdorashvili.com/api/auth';
+  private readonly API_URL = 'http://localhost:5279/api/auth';
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
 
   constructor(private http: HttpClient, private router: Router) {

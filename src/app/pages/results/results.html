@@ -1,0 +1,23 @@
+<div *ngIf="result" class="flex items-center justify-center min-h-screen bg-gray-50">
+  <div class="p-8 max-w-md w-full bg-white rounded-xl shadow-md">
+    <h2 class="text-2xl font-bold text-center mb-6">Quiz Results</h2>
+    
+    <div class="mb-6 space-y-3">
+      <p class="text-green-600 font-semibold text-lg">✓ Correct: {{ result.correctAmount }}</p>
+      <p class="text-red-600 font-semibold text-lg">✗ Incorrect: {{ result.incorrectAmount }}</p>
+    </div>
+
+    <div *ngIf="result.failed" class="mb-6 bg-red-100 border-l-4 border-red-500 p-4 rounded-r">
+      <p class="text-red-700 font-bold">You did not pass the quiz.</p>
+      <a 
+        routerLink="/exam"
+        class="mt-3 inline-block bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded transition duration-150 ease-in-out">
+        Try Again
+      </a>
+    </div>
+
+    <div *ngIf="!result.failed" class="bg-green-100 border-l-4 border-green-500 p-4 rounded-r">
+      <p class="text-green-700 font-bold">Congratulations! You passed!</p>
+    </div>
+  </div>
+</div>

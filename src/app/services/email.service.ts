@@ -6,7 +6,8 @@ import { catchError, Observable, tap } from 'rxjs';
   providedIn: 'root'
 })
 export class EmailService {
-  private readonly API_URL = 'https://dlt-api.shotatevdorashvili.com/api/email';
+  // private readonly API_URL = 'https://dlt-api.shotatevdorashvili.com/api/email';
+  private readonly API_URL = 'http://localhost:5279/api/email';
 
   constructor(private http: HttpClient) {}
 
@@ -19,7 +20,12 @@ export class EmailService {
     );
   }
   sendPasswordResetCode(email: string): Observable<any> {
-    return this.http.post(`${this.API_URL}/send-password-reset-code`, email);
+    return this.http.post(`${this.API_URL}/send-password-reset-code`, {email}).pipe(
+      catchError(error => {
+        console.error('Forgot password api error: ', error);
+        throw error;
+      })
+    );
   }
 
   verifyCode(email: string, code: string): Observable<any> {
