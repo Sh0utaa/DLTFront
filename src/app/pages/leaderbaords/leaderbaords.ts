@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-leaderbaords',
@@ -9,7 +10,7 @@ import { Component } from '@angular/core';
   styleUrl: './leaderbaords.css'
 })
 export class Leaderbaords {
-  private url = "http://localhost:5279/api/leaderboards/rates"
+  private url = `${environment.apiUrl}/api/leaderboards/rates`
 
   leaderboardData: any[] = [];
   isLoading = true;

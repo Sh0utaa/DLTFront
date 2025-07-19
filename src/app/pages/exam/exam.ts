@@ -7,7 +7,7 @@ import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { catchError, finalize, of } from 'rxjs';
 import { ResultService } from '../../services/result.service';
-
+import { environment } from '../../environments/environment';
 @Component({
   selector: 'app-exam',
   standalone: true,
@@ -119,7 +119,7 @@ export class Exam {
   fetchQuestions() {
     this.questionsLoading = true;
 
-    const url = `http://localhost:5279/api/questions/exam/${this.selectedCategoryId}?language=${this.selectedLanguage}`;
+    const url = `${environment.apiUrl}/api/questions/exam/${this.selectedCategoryId}?language=${this.selectedLanguage}`;
 
     this.http.get<Question[]>(url, {
       withCredentials: true,
@@ -166,7 +166,7 @@ export class Exam {
 
     const payload = this.getAnswerJson(); // Prepare the payload
 
-    this.http.post('http://localhost:5279/api/questions/submit', payload, {
+    this.http.post(`${environment.apiUrl}/api/questions/submit`, payload, {
       withCredentials: true,
       responseType: 'json',
     }).subscribe({

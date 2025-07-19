@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, Observable, tap } from 'rxjs';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EmailService {
-  // private readonly API_URL = 'https://dlt-api.shotatevdorashvili.com/api/email';
-  private readonly API_URL = 'http://localhost:5279/api/email';
+  private readonly API_URL = `${environment.apiUrl}/api/email`;
 
   constructor(private http: HttpClient) {}
 

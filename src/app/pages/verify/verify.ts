@@ -5,6 +5,7 @@ import { Router, RouterLink } from '@angular/router';
 import { EmailService } from '../../services/email.service';
 import { AuthService } from '../../services/auth.service';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-verify',
@@ -63,7 +64,7 @@ export class Verify {
 
   onKeyDown(event: KeyboardEvent) {
     // Allow only numbers, backspace, and navigation keys
-    const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'];
+    const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Ctrl', 'V', 'v'];
   
     if (!/^\d$/.test(event.key) && !allowedKeys.includes(event.key)) {
       event.preventDefault();
@@ -141,7 +142,7 @@ export class Verify {
             "newPassword": this.formData.password
           }
           this.isLoading = true;
-          this.http.post("http://localhost:5279/api/auth/reset-password", resetPasswordObject)
+          this.http.post(`${environment.apiUrl}/api/auth/reset-password`, resetPasswordObject)
           .subscribe({
             next: (resetResponse) => {
               this.statusMessage = "Password reset successfully"

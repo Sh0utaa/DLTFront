@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
 interface LoginForm {
   email: string;
@@ -28,8 +29,7 @@ export class Login {
   constructor(private http: HttpClient, private router: Router) {}
 
     ngOnInit() {
-    // this.http.get<{ message: string }>('https://dlt-api.shotatevdorashvili.com/api/auth/validate-user', {
-    this.http.get<{ message: string }>('http://localhost:5279/api/auth/validate-user', {
+    this.http.get<{ message: string }>(`${environment.apiUrl}/api/auth/validate-user`, {
       withCredentials: true,
       headers: {
           'Content-Type': 'application/json',
@@ -45,12 +45,12 @@ export class Login {
     });
   }
 
-  onSubmit() {
+  login(form: any) {
     this.isLoading = true;
     this.statusMessage = null;
     this.statusType = null;
 
-    this.http.post<any>('http://localhost:5279/api/auth/login', this.form, {
+    this.http.post<any>(`${environment.apiUrl}/api/auth/login`, form, {
       withCredentials: true, 
       observe: 'response' 
     })
@@ -73,6 +73,15 @@ export class Login {
         this.isLoading = false;
       }
     });
+  }
+
+  onSubmit() {
+    this.login(this.form);
+  }
+
+  genericAccountSignin()
+  {
+    this.login({email: "generic@generic", password: "Generic!123__"})
   }
 
   private handleError(error: any) {
