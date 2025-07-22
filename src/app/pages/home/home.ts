@@ -6,11 +6,14 @@ import { FormsModule } from '@angular/forms'; // Added for two-way binding
 import { AuthService } from '../../services/auth.service';
 import { catchError, finalize, of, switchMap } from 'rxjs';
 import { Question } from '../exam/question.model';
+import { HttpClient } from '@angular/common/http';
+import { ResultService } from '../../services/result.service';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterLink, CommonModule, FormsModule], // Added FormsModule
+  imports: [CommonModule, FormsModule],
   templateUrl: './home.html',
   styleUrl: './home.css'
 })
@@ -24,7 +27,13 @@ export class Home {
   currentQuestionIndex = 0;
   selectedAnswers: { [questionId: number]: number } = {};
 
-  constructor(private examService: ExamService, private authService: AuthService, private router: Router) {}
+  constructor(
+    private examService: ExamService,
+    private authService: AuthService,
+    private router: Router,
+    private http: HttpClient,
+    private resultService: ResultService
+  ) {}
 
   startExam() {
     this.examStarted = false;
@@ -89,9 +98,15 @@ export class Home {
 
   // Jump to specific question
   jumpToQuestion() {
-    if (this.jumpToIndex && this.jumpToIndex >= 1 && this.jumpToIndex <= this.questions.length) {
+    if (
+      this.jumpToIndex !== null &&
+      this.jumpToIndex >= 1 &&
+      this.jumpToIndex <= this.questions.length
+    ) {
       this.currentQuestionIndex = this.jumpToIndex - 1;
       this.jumpToIndex = null;
+    } else {
+      alert('Invalid question number.');
     }
   }
 
@@ -100,10 +115,39 @@ export class Home {
     this.selectedAnswers[questionId] = answerId;
   }
 
-  // Submit exam
+  getAnswerJson() {
+    return Object.entries(this.selectedAnswers).map(([questionId, answerId]) => ({
+      questionId: Number(questionId),
+      answerId: Number(answerId)
+    }));
+  }
+
   submitExam() {
-    // Add your exam submission logic here
-    console.log('Selected answers:', this.selectedAnswers);
-    // Example: this.examService.submitExam(this.selectedAnswers);
+    const answeredCount = Object.keys(this.selectedAnswers).length;
+
+    if (answeredCount !== this.questions.length) {
+      alert(`You have answered ${answeredCount} out of ${this.questions.length} questions.`);
+      return;
+    }
+
+    const payload = this.getAnswerJson(); // Prepare the payload
+
+    this.http.post(`${environment.apiUrl}/api/questions/submit`, payload, {
+      withCredentials: true,
+      responseType: 'json',
+    }).subscribe({
+      next: (response) => {
+        console.log('Submission successful:', response);
+        alert('Your answers have been submitted successfully!');
+
+        this.resultService.changeResult(response);
+
+        this.router.navigate(['/results'])
+      },
+      error: (err) => {
+        console.error('Submission failed:', err);
+        alert('There was an error submitting your answers.');
+      }
+    });
   }
 }

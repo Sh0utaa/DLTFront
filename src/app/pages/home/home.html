@@ -67,9 +67,10 @@
               Question
               <input
                 type="number"
+                [(ngModel)]="jumpToIndex"
                 [min]="1"
                 [max]="questions.length"
-                class="w-12 h-8 text-center border-b-2 border-blue-400 focus:outline-none focus:border-blue-600 mx-1"
+                class="w-12 h-8 text-center no-spinner placeholder-style border-b-2 border-blue-400 focus:outline-none focus:border-blue-600 mx-1"
                 placeholder="{{currentQuestionIndex + 1}}"
               />
               of {{ questions.length }}
@@ -108,6 +109,7 @@
                 [name]="'question-' + questions[currentQuestionIndex].id"
                 [value]="answer.id"
                 [checked]="selectedAnswers[questions[currentQuestionIndex].id] === answer.id"
+                (click)="onAnswerSelect(questions[currentQuestionIndex].id, answer.id)"
                 class="h-4 w-4 text-blue-600 focus:ring-blue-500"
               />
               <label 
@@ -124,6 +126,7 @@
             <button
               [disabled]="currentQuestionIndex === 0"
               class="bg-gray-400 hover:bg-gray-500 text-white py-2 px-6 rounded-lg disabled:opacity-50 transition-colors"
+              (click)="previousQuestion()"
             >
               ← Back
             </button>
@@ -134,6 +137,7 @@
 
             <button
               *ngIf="currentQuestionIndex < questions.length - 1"
+              (click)="nextQuestion()"
               class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-lg transition-colors"
             >
               Next →
@@ -142,6 +146,7 @@
             <button
               *ngIf="currentQuestionIndex === questions.length - 1"
               class="bg-green-600 hover:bg-green-700 text-white py-2 px-6 rounded-lg transition-colors"
+              (click)="submitExam()"
             >
               Submit Exam
             </button>
