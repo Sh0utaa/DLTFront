@@ -9,30 +9,145 @@
   <!-- Dark Overlay -->
   <div class="absolute inset-0 bg-black/60"></div>
 
-  <!-- Centered Content Block -->
-  <div class="absolute inset-0 flex items-center justify-center px-4">
+  <!-- Welcome Screen -->
+  <div *ngIf="!examStarted" class="absolute inset-0 flex items-center justify-center px-4">
     <div class="text-white text-center max-w-2xl">
       <h1 class="text-4xl md:text-6xl font-bold mb-6">
         Welcome to the Driver's License Platform
       </h1>
 
-    <button
-        class="bg-white text-black font-semibold px-6 py-2 rounded-md border border-black hover:bg-black hover:text-white hover:cursor-pointer transition-colors duration-200"
-        routerLink="/exam"
-    >
-        Start Exam
-    </button>
+      <button
+        class="bg-white text-black font-semibold px-6 py-3 rounded-md border border-black hover:bg-black hover:text-white hover:cursor-pointer transition-colors duration-200 text-lg"
+        (click)="startExam()"
+        [disabled]="loading"
+      >
+        <span *ngIf="!loading">Start Exam</span>
+        <span *ngIf="loading">Loading...</span>
+      </button>
 
-      <p class="text-lg md:text-xl leading-relaxed">
-        <br />
+      <p class="text-lg md:text-xl leading-relaxed mt-8">
         Reach out at
         <a
           href="mailto:shota@shotatevdorashvili.com"
           class="underline hover:text-blue-300"
         >
           shota&#64;shotatevdorashvili.com
-        </a>.
+        </a>
       </p>
+    </div>
+  </div>
+
+  <!-- Exam Screen -->
+  <div *ngIf="examStarted" class="absolute inset-0 overflow-y-auto py-10">
+    <div class="container mx-auto px-4">
+      <!-- Loading State -->
+      <div *ngIf="questionsLoading" class="text-center py-20 text-white">
+        <div class="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white mb-4"></div>
+        <p class="text-xl">Loading questions...</p>
+      </div>
+
+      <!-- Error State -->
+      <div *ngIf="errorMessage" class="bg-red-500/80 p-6 rounded-lg max-w-2xl mx-auto my-10 text-white">
+        <h2 class="text-2xl font-bold mb-2">Error</h2>
+        <p class="mb-4">{{ errorMessage }}</p>
+        <button
+          class="bg-white text-red-600 font-semibold px-4 py-2 rounded hover:bg-gray-100"
+          (click)="startExam()"
+        >
+          Retry
+        </button>
+      </div>
+
+      <!-- Exam Content -->
+      <div *ngIf="!questionsLoading && questions.length > 0" class="space-y-6">
+        <div class="p-6 bg-white/90 backdrop-blur-sm rounded-xl shadow-lg max-w-4xl mx-auto">
+          <!-- Question Navigation -->
+          <div class="mb-6 flex justify-between items-center flex-wrap gap-2">
+            <p class="font-semibold text-gray-700">
+              Question
+              <input
+                type="number"
+                [min]="1"
+                [max]="questions.length"
+                class="w-12 h-8 text-center border-b-2 border-blue-400 focus:outline-none focus:border-blue-600 mx-1"
+                placeholder="{{currentQuestionIndex + 1}}"
+              />
+              of {{ questions.length }}
+              <button
+                (click)="jumpToQuestion()"
+                class="ml-2 bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm"
+              >
+                Go
+              </button>
+            </p>
+            
+            <div class="text-sm text-gray-500">
+            </div>
+          </div>
+
+          <!-- Question Image -->
+          <div *ngIf="questions[currentQuestionIndex].image" class="flex justify-center my-4">
+            <img 
+              [src]="questions[currentQuestionIndex].image" 
+              [alt]="'Question image ' + (currentQuestionIndex + 1)"
+              class="max-w-full md:max-w-2xl max-h-96 object-contain rounded shadow"
+            >
+          </div>
+
+          <!-- Question Text -->
+          <h3 class="text-xl font-semibold text-gray-800 mb-4">
+            {{ questions[currentQuestionIndex].questionContent }}
+          </h3>
+
+          <!-- Answer Options -->
+          <div class="space-y-3">
+            <div *ngFor="let answer of questions[currentQuestionIndex].answers" class="flex items-center">
+              <input
+                type="radio"
+                [id]="'q'+currentQuestionIndex+'a'+answer.id"
+                [name]="'question-' + questions[currentQuestionIndex].id"
+                [value]="answer.id"
+                [checked]="selectedAnswers[questions[currentQuestionIndex].id] === answer.id"
+                class="h-4 w-4 text-blue-600 focus:ring-blue-500"
+              />
+              <label 
+                [for]="'q'+currentQuestionIndex+'a'+answer.id"
+                class="ml-3 block text-gray-700 hover:text-gray-900 cursor-pointer"
+              >
+                {{ answer.text }}
+              </label>
+            </div>
+          </div>
+
+          <!-- Navigation Buttons -->
+          <div class="flex justify-between mt-8 pt-4 border-t border-gray-200">
+            <button
+              [disabled]="currentQuestionIndex === 0"
+              class="bg-gray-400 hover:bg-gray-500 text-white py-2 px-6 rounded-lg disabled:opacity-50 transition-colors"
+            >
+              ← Back
+            </button>
+
+            <div class="text-sm text-gray-500 self-center">
+              Question {{ currentQuestionIndex + 1 }} of {{ questions.length }}
+            </div>
+
+            <button
+              *ngIf="currentQuestionIndex < questions.length - 1"
+              class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-lg transition-colors"
+            >
+              Next →
+            </button>
+
+            <button
+              *ngIf="currentQuestionIndex === questions.length - 1"
+              class="bg-green-600 hover:bg-green-700 text-white py-2 px-6 rounded-lg transition-colors"
+            >
+              Submit Exam
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

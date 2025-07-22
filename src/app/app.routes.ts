@@ -5,7 +5,6 @@ import { Login } from './pages/login/login';
 import { Register } from './pages/register/register';
 import { Verify } from './pages/verify/verify';
 import { Leaderbaords } from './pages/leaderbaords/leaderbaords';
-import { Exam } from './pages/exam/exam';
 import { Info } from './pages/info/info'
 import { Profile } from './pages/profile/profile';
 import { Results } from './pages/results/results';
@@ -18,7 +17,6 @@ export const routes: Routes = [
   { path: 'register', component: Register },
   { path: 'verify', component: Verify },
   { path: 'leaderboards', component: Leaderbaords },
-  { path: 'exam', component: Exam },
   { path: 'info', component: Info },
   { path: 'profile', component: Profile },
   { path: 'results', component: Results },
